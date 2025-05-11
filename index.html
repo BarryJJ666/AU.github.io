@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面部动作单元在表情识别与情绪理解中的研究进展与趋势</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>面部动作单元 (AUs) 在表情识别与情绪理解中的研究进展与趋势</h1>
+            <p class="subtitle">一份关于最新技术、挑战与未来展望的综述</p>
+        </div>
+    </header>
+
+    <nav id="navbar">
+        <div class="container">
+            <ul>
+                <li><a href="#intro">引言</a></li>
+                <li><a href="#au-basics">AU基础</a></li>
+                <li><a href="#traditional-methods">传统方法</a></li>
+                <li><a href="#deep-learning-advances">深度学习新进展</a></li>
+                <li><a href="#datasets-metrics">数据集与评估</a></li>
+                <li><a href="#au-editing">AU与表情编辑</a></li>
+                <li><a href="#future-outlook">未来趋势</a></li>
+                <li><a href="#conclusion">总结</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="intro" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🌟</span> 引言</h2>
+                <p>面部表情是人类情感交流的关键。准确理解面部表情对于构建智能的人机交互系统至关重要。面部动作编码系统 (FACS) 及其核心概念——面部动作单元 (AUs)，为客观分析面部表情提供了标准化工具。每个AU对应特定面部肌肉的运动，它们的组合能描绘出几乎所有人类表情。因此，AU的自动识别已成为情感计算和计算机视觉领域的热点。</p>
+                <p>早期AU识别依赖手工特征和传统机器学习，但在复杂场景下表现有限。近年来，深度学习技术，特别是CNNs、RNNs、GNNs及Transformer，极大地提升了AU识别性能。本综述将结合九篇前沿论文，深入探讨当前的技术进展和未来趋势，覆盖参数高效模型、测试时训练、可解释性、视觉-语言模型、图神经网络及AU在表情编辑中的应用。</p>
+            </div>
+        </section>
+
+        <section id="au-basics" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🤔</span> 面部动作单元基础</h2>
+                <h3>面部动作编码系统 (FACS)</h3>
+                <p>FACS是一个基于解剖学的系统，通过观察面部肌肉运动来客观描述和测量面部表情。它将表情分解为独立的AUs，如AU1 (内眉提升) 或AU12 (拉伸嘴角)。FACS还定义了AU的激活强度等级 (A到E)。</p>
+                <h3>AU的编码与描述</h3>
+                <p>AU编码通常包含AU编号和强度，例如“AU12C”表示嘴角中等强度拉伸。不同AU组合形成复杂表情，如愉悦通常伴随AU6 (脸颊提升) 和AU12的激活。其客观性和可分解性使其成为多领域的重要工具。</p>
+                <div class="figure-container">
+                    <img src="images/au_example.png" alt="面部表情及其相关AU的示例1" class="responsive-img">
+                    <img src="images/au_example1.png" alt="面部表情及其相关AU的示例2" class="responsive-img">
+                    <figcaption>图1: 不同基本表情及其对应的激活AU列表和AU热图 (图片来源: Belharbi et al., 2024)</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section id="traditional-methods" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">📜</span> 传统的AU识别方法</h2>
+                <p>在深度学习普及前，AU识别主要依赖手工特征提取和传统机器学习。方法包括基于几何特征（面部关键点变化）和表观特征（如Gabor、LBP、HOG捕捉纹理和形状变化）。这些特征随后送入SVM、AdaBoost等分类器进行识别。然而，这些方法对姿态、光照敏感，且难以捕捉AU的复杂细微变化。</p>
+            </div>
+        </section>
+
+        <section id="deep-learning-advances" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🚀</span> 基于深度学习的AU识别新进展</h2>
+                <p>深度学习，特别是CNN、Transformer、GNN以及与LLM的结合，极大地推动了AU识别技术。以下是基于九篇前沿论文的最新进展概述：</p>
+
+                <div class="paper-grid">
+                    <div class="paper-card animated-card">
+                        <h3>AUFormer: 参数高效的视觉Transformer</h3>
+                        <p>针对AU数据稀缺导致的过拟合问题，AUFormer (Yuan et al., 2024) 引入参数高效迁移学习 (PETL)。核心是为每个AU设计的<strong>Mixture-of-Knowledge Expert (MoKE)</strong> 协作机制，用极少参数整合个性化多尺度 (MRF) 和相关性知识 (CA)，并注入冻结的ViT。同时提出<strong>MDWA-Loss</strong>优化样本不平衡和错标问题。</p>
+                        <div class="figure-container">
+                            <img src="images/auformer_comparison.png" alt="AUFormer性能比较" class="responsive-img">
+                            <figcaption>图2: AUFormer与其他方法的参数量、FLOPs和F1-score比较 (Yuan et al., 2024)</figcaption>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/auformer_architecture.png" alt="AUFormer架构" class="responsive-img">
+                            <figcaption>图3: AUFormer整体架构 (Yuan et al., 2024)</figcaption>
+                        </div>
+                    </div>
+
+                    <div class="paper-card animated-card">
+                        <h3>AC2D: 自适应约束自注意力与因果去混淆</h3>
+                        <p>AC2D (Shao et al., 2024) 解决自注意力捕获无关信息及样本特性差异导致的预测偏差。通过<strong>自适应约束自注意力权重分布</strong> (基于AU位置先验的KL散度损失) 和<strong>样本混淆因子的因果去混淆</strong> (后门调整技术)，使模型关注AU相关区域并消除样本偏差。基于简化的ResTv2主干。</p>
+                        <div class="figure-container">
+                            <img src="images/ac2d_attention.png" alt="AC2D自注意力可视化" class="responsive-img">
+                            <figcaption>图4: 有无约束自注意力下AU10、12、25的权重分布 (Shao et al., 2024)</figcaption>
+                        </div>
+                         <div class="figure-container">
+                            <img src="images/ac2d_architecture.png" alt="AC2D架构" class="responsive-img">
+                            <figcaption>图5: AC2D框架整体架构 (Shao et al., 2024)</figcaption>
+                        </div>
+                    </div>
+
+                    <div class="paper-card animated-card">
+                        <h3>AU-TTT: 视觉测试时训练模型</h3>
+                        <p>AU-TTT (Xing et al., 2025) 引入测试时训练 (TTT) 层应对跨域性能下降。优化包括<strong>双向TTT (Bi-TTT)</strong> 扫描机制以适应图像任务，以及<strong>AU特定RoI扫描机制</strong>利用面部关键点热图提取细粒度特征。TTT层具有线性计算复杂度，模型在推理时通过自监督学习更新。</p>
+                        <div class="figure-container">
+                            <img src="images/auttt_framework.png" alt="AU-TTT框架" class="responsive-img">
+                            <figcaption>图6: AU-TTT框架概览，包括不同扫描方法 (Xing et al., 2025)</figcaption>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card animated-card">
+                        <h3>DEFAULTS: 基于FAU的视觉与文本解释</h3>
+                        <p>DEFAULTS (Nahulanthran et al., 2025) 为FER模型提供基于FAU的视觉和文本解释。视觉上高亮与激活FAU相关的面部标志点轮廓；文本上直接描述激活的FAU。用户研究表明，FAU-VT (视觉+文本) 和 FAU-T (纯文本) 解释能显著提升用户对模型预测的理解度和适当信任水平。</p>
+                        <div class="figure-container">
+                            <img src="images/defaults_overview.png" alt="DEFAULTS研究概览" class="responsive-img">
+                            <figcaption>图7: DEFAULTS研究概览，展示不同解释方法及评估指标 (Nahulanthran et al., 2025)</figcaption>
+                        </div>
+                    </div>
+
+                    <div class="paper-card animated-card">
+                        <h3>Belharbi et al.: 空间AU线索引导的可解释FER</h3>
+                        <p>该工作 (Belharbi et al., 2024) 通过显式整合AU空间线索训练可解释FER模型。训练时构建AU热图 (基于表情标签和标志点)，并通过<strong>AU图对齐损失</strong> (余弦相似度) 约束分类器的空间层特征，使其与AU热图相关联。这提升了层级注意力图和CAM图的可解释性，且无需额外AU定位标注。</p>
+                        <div class="figure-container">
+                            <img src="images/belharbi_cam.png" alt="Belharbi et al. CAM比较" class="responsive-img">
+                            <figcaption>图8: 有无AU图训练的FER分类器生成的CAM和注意力图比较 (Belharbi et al., 2024)</figcaption>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/belharbi_training_inference.png" alt="Belharbi et al. 训练推理流程" class="responsive-img">
+                            <figcaption>图9: 可解释FER分类器的训练和推理流程 (Belharbi et al., 2024)</figcaption>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-card animated-card">
+                        <h3>VL-FAU: 视觉-语言联合学习的可解释FAU识别</h3>
+                        <p>VL-FAU (Ge et al., 2024) 通过整合视觉识别与语言生成实现端到端可解释FAU识别。采用<strong>双层AU个体细化 (DAIR)</strong> 学习AU专属视觉特征，并结合<strong>局部AU语言生成</strong> (描述各AU状态) 和<strong>全局面部语言生成</strong> (描述整体面部激活状态) 作为辅助监督。联合优化视觉识别与语言生成任务。</p>
+                        <div class="figure-container">
+                            <img src="images/vl_fau_paradigm.png" alt="VL-FAU范式比较" class="responsive-img">
+                            <figcaption>图10: 传统FAU识别与VL-FAU范式的比较 (Ge et al., 2024)</figcaption>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/vl_fau_architecture.png" alt="VL-FAU架构" class="responsive-img">
+                            <figcaption>图11: VL-FAU整体架构 (Ge et al., 2024)</figcaption>
+                        </div>
+                    </div>
+
+                    <div class="paper-card animated-card">
+                        <h3>AU-LLaVA: 基于大语言模型的统一AU识别框架</h3>
+                        <p>AU-LLaVA (Hu et al., 2024) 是首个基于LLM (LLaVA) 的统一AU识别框架。它包含视觉编码器、投影层和LLM。通过精心设计的文本描述 (含任务目标、AU定义与定位、输出格式) 将AU识别转化为视觉问答任务。使用LoRA进行参数高效微调，能灵活处理多种AU任务 (检测、强度估计)。</p>
+                        <div class="figure-container">
+                            <img src="images/aullava_versatility.png" alt="AU-LLaVA多功能性展示" class="responsive-img">
+                            <figcaption>图12: AU-LLaVA模型结果的多功能性 (Hu et al., 2024)</figcaption>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/aullava_architecture.png" alt="AU-LLaVA架构" class="responsive-img">
+                            <figcaption>图13: AU-LLaVA架构框架 (Hu et al., 2024)</figcaption>
+                        </div>
+                    </div>
+
+                    <div class="paper-card animated-card">
+                        <h3>Zihan Wang et al.: 时空AU关系图表示学习</h3>
+                        <p>该方法 (Wang et al., 2023) 为ABAW竞赛提出，核心是学习<strong>时空AU关系图表示</strong>。包含: 1) MAE预训练的面部表示编码器 (FRE)； 2) AU特异性特征生成器 (AFG)； 3) 时空图学习模块 (STGL)，内部含空间GCN模块 (帧内AU关系) 和时间Transformer模块 (AU时间动态)。</p>
+                        <div class="figure-container">
+                            <img src="images/zihan_wang_pipeline.png" alt="Zihan Wang et al. 流程图" class="responsive-img">
+                            <figcaption>图14: 时空AU关系图表示学习方法流程图 (Wang et al., 2023)</figcaption>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="au-editing" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🎨</span> AU在面部表情编辑中的应用: MagicFace</h2>
+                <p>MagicFace (Wei et al., 2025) 通过控制AU的相对变化实现高保真面部表情编辑。它基于Stable Diffusion模型，并设计了<strong>ID编码器</strong>以保留身份细节，以及<strong>属性控制器</strong>来维持背景和姿态一致性。AU的变化量作为条件注入去噪U-Net，实现了对任意身份肖像进行精细、可控的表情编辑，展示了AU在下游应用中的强大潜力。</p>
+                <div class="figure-container">
+                    <img src="images/magicface_results.png" alt="MagicFace编辑结果" class="responsive-img">
+                    <figcaption>图15: MagicFace编辑结果示例 (Wei et al., 2025)</figcaption>
+                </div>
+                <div class="figure-container">
+                    <img src="images/magicface_architecture.png" alt="MagicFace架构" class="responsive-img">
+                    <figcaption>图16: MagicFace整体框架 (Wei et al., 2025)</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section id="datasets-metrics" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">📊</span> 常用数据集和评估指标</h2>
+                <h3>常用AU数据集</h3>
+                <ul>
+                    <li><strong>BP4D:</strong> 自发表情，AU二元标签。被AUFormer, AC2D, VL-FAU, AU-LLaVA等广泛使用。</li>
+                    <li><strong>DISFA:</strong> 自发表情，AU 0-5级强度标签。同样被AUFormer, AC2D, VL-FAU, AU-LLaVA等使用。</li>
+                    <li><strong>Aff-Wild2:</strong> 大规模野外环境数据集，含AU、表情、效价-唤醒度标注。Zihan Wang et al., AC2D, AU-TTT, MagicFace使用。</li>
+                    <li><strong>CASME II:</strong> 微表情AU检测。AUFormer使用。</li>
+                    <li><strong>FEAFA:</strong> 自然场景，AU连续强度值。AU-LLaVA使用。</li>
+                    <li><strong>RAF-DB & AffectNet:</strong> 真实世界表情数据集。Belharbi et al.使用。</li>
+                    <li><strong>CK+:</strong> 实验室环境表情序列。DEFAULTS的FER模型在此训练。</li>
+                </ul>
+                <h3>评估指标</h3>
+                <ul>
+                    <li><strong>F1-score (F1):</strong> AU检测最常用，精确率和召回率的调和平均。</li>
+                    <li><strong>准确率 (Accuracy, Acc):</strong> 正确分类样本比例。</li>
+                    <li><strong>平均绝对误差 (MAE):</strong> 用于AU强度估计。</li>
+                    <li><strong>可解释性评估:</strong> 用户理解度、适当信任 (DEFAULTS)；CAM/Attention与AU图相似度 (Belharbi et al.)。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="future-outlook" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🔮</span> 新兴趋势与未来方向</h2>
+                <p>通过分析近期前沿论文，AU识别领域展现出以下重要趋势：</p>
+                <ul>
+                    <li><strong>Transformer和自注意力机制的深化应用:</strong> 探索更高效、更适应AU特性的Transformer变体。</li>
+                    <li><strong>参数效率与模型轻量化:</strong> 如AUFormer的PETL范式，未来关注知识蒸馏、剪枝等。</li>
+                    <li><strong>模型泛化与领域适应:</strong> 如AU-TTT的测试时训练和AC2D的因果去混淆。跨域、无监督/半监督学习是重点。</li>
+                    <li><strong>可解释AU识别 (XAI-AU):</strong> DEFAULTS, Belharbi et al., VL-FAU, AU-LLaVA的探索。开发更直观、准确的解释方法。</li>
+                    <li><strong>大语言模型 (LLMs) 的融合:</strong> VL-FAU和AU-LLaVA展示了LLM在语义理解和解释生成方面的潜力。</li>
+                    <li><strong>多模态AU识别:</strong> 融合视觉、听觉、生理等多模态信息。</li>
+                    <li><strong>因果推断的应用:</strong> AC2D的实践。未来用于处理AU间相互作用、环境因素干扰等。</li>
+                    <li><strong>AU在下游任务中的应用深化:</strong> 如MagicFace在表情编辑中的应用。虚拟人、医疗诊断等。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="conclusion" class="animated-section">
+            <div class="container">
+                <h2><span class="emoji">🎉</span> 总结与展望</h2>
+                <p>面部动作单元 (AU) 识别技术在过去几年取得了显著进步，从传统方法发展到以Transformer和LLM为代表的前沿探索。近期研究揭示了模型架构革新、新学习范式拓展、可解释性增强、多模态与跨学科融合以及面向应用驱动等关键趋势。</p>
+                <p>尽管如此，AU识别仍面临诸多挑战，如复杂环境干扰、细微AU检测、标注数据缺乏、模型公平性等。未来，自监督/弱监督学习、动态时序建模、个性化识别以及伦理隐私保护将是值得关注的方向。随着AI技术与交叉学科的深入融合，AU识别将在情感计算和人机交互领域发挥更核心的作用。</p>
+                 <p class="author-note">希望本文能为相关领域的研究者提供有益的参考。也特别感谢导师布置的这项调研任务，让我对AU领域有了更深入的理解。—— Yuzhe Zhang</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> Yuzhe Zhang. 面部动作单元研究进展综述。</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
